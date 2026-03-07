@@ -11,6 +11,16 @@ public class CuentaService {
         this.cuentaRepository = cuentaRepository;
     }
 
+    public void crearCuenta(String idCuenta, double saldoInicial) {
+        // Verificar que la cuenta no exista ya
+        if (cuentaRepository.buscarPorId(idCuenta).isPresent()) {
+            throw new IllegalArgumentException("Ya existe una cuenta con el ID: " + idCuenta);
+        }
+        
+        Cuenta cuenta = new Cuenta(idCuenta, saldoInicial);
+        cuentaRepository.guardar(cuenta);
+    }
+
     public void depositar(String idCuenta, double monto) {
         Cuenta cuenta = obtenerCuenta(idCuenta);
         cuenta.depositar(monto);

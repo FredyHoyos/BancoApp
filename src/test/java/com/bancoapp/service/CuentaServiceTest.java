@@ -2,21 +2,21 @@ package com.bancoapp.service;
 
 import com.bancoapp.model.Cuenta;
 import com.bancoapp.repository.CuentaRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.jupiter.api.DisplayName; // Para dar nombres descriptivos a los tests
+import org.junit.jupiter.api.Test; // Anotación para marcar métodos de test
+import org.junit.jupiter.api.extension.ExtendWith; // Para extender JUnit con Mockito (habilitar mocks en los tests)
+import org.mockito.InjectMocks; // Para inyectar los mocks en el servicio
+import org.mockito.Mock; // Para crear objetos simulados (mocks) del repositorio
+import org.mockito.junit.jupiter.MockitoExtension; // Extensión de Mockito para JUnit 5
 
-import java.util.Optional;
+import java.util.Optional; // Para manejar resultados que pueden ser "vacíos" (como buscar una cuenta que no existe)
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals; // Para verificar que los resultados son los esperados
+import static org.junit.jupiter.api.Assertions.assertThrows; // Para verificar que se lanzan excepciones cuando se esperan errores
+import static org.mockito.Mockito.never; // Para verificar que un método NO fue llamado
+import static org.mockito.Mockito.times; // Para verificar cuántas veces fue llamado un método (por ejemplo, guardar la cuenta)
+import static org.mockito.Mockito.verify; // Para verificar que el servicio interactúa correctamente con el repositorio (por ejemplo, que llamó a guardar o buscar)
+import static org.mockito.Mockito.when; // Para configurar el comportamiento del mock (por ejemplo, qué devuelve cuando se busca una cuenta por ID)
 
 @ExtendWith(MockitoExtension.class)
 class CuentaServiceTest {
@@ -110,5 +110,39 @@ class CuentaServiceTest {
         assertEquals(2450.75, saldo);
         verify(cuentaRepository, times(1)).buscarPorId("C-500");
         verify(cuentaRepository, never()).guardar(cuenta);
+    }
+
+    @Test
+    @DisplayName("Crear cuenta nueva correctamente")
+    void debeCrearCuentaNueva() {
+        // AAA - Arrange
+        when(cuentaRepository.buscarPorId("C-600")).thenReturn(Optional.empty());
+
+        // AAA - Act
+        cuentaService.crearCuenta("C-600", 1000);
+
+        // AAA - Assert
+        verify(cuentaRepository, times(1)).buscarPorId("C-600");
+        // Verificar que guardó la nueva cuenta
+        verify(cuentaRepository, times(1)).guardar(org.mockito.ArgumentMatchers.any(Cuenta.class));
+    }
+
+    @Test
+    @DisplayName("No permitir crear cuenta duplicada")
+    void noDebePermitirCrearCuentaDuplicada() {
+        // AAA - Arrange
+        Cuenta cuentaExistente = new Cuenta("C-700", 500);
+        when(cuentaRepository.buscarPorId("C-700")).thenReturn(Optional.of(cuentaExistente));
+
+        // AAA - Act + Assert
+        IllegalArgumentException exception = assertThrows(
+                IllegalArgumentException.class,
+                () -> cuentaService.crearCuenta("C-700", 1000)
+        );
+
+        // Verificar el mensaje de error
+        assertEquals("Ya existe una cuenta con el ID: C-700", exception.getMessage());
+        // Verificar que NO se guardó ninguna cuenta nueva
+        verify(cuentaRepository, never()).guardar(org.mockito.ArgumentMatchers.any(Cuenta.class));
     }
 }
