@@ -4,6 +4,8 @@ import com.bancoapp.repository.CuentaRepositoryImpl;
 import com.bancoapp.service.CuentaService;
 
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class BancoAppMain {
 
@@ -11,11 +13,11 @@ public class BancoAppMain {
             new CuentaService(new CuentaRepositoryImpl());
     private static final Scanner scanner = new Scanner(System.in);
 
+    private static Logger logger = Logger.getLogger(BancoAppMain.class.getName());
+
     public static void main(String[] args) {
-        System.out.println("╔════════════════════════════════════════╗");
-        System.out.println("║   BIENVENIDO A BANCOAPP - JAVA 21      ║");
-        System.out.println("╚════════════════════════════════════════╝");
-        
+        logger.info("Iniciando BancoApp - Java 21");
+
         boolean continuar = true;
         
         while (continuar) {
@@ -29,19 +31,19 @@ public class BancoAppMain {
                     case 3 -> retirar();
                     case 4 -> consultarSaldo();
                     case 5 -> {
-                        System.out.println("\n¡Gracias por usar BancoApp! ");
+                        logger.info("Saliendo de BancoApp");
                         continuar = false;
                     }
-                    default -> System.out.println("Opción inválida. Intente nuevamente.");
+                    default -> logger.warning("Opción inválida. Intente nuevamente.");
                 }
             } catch (IllegalArgumentException e) {
-                System.out.println("Error: " + e.getMessage());
+                logger.severe("Error: " + e.getMessage());
             } catch (Exception e) {
-                System.out.println("Error inesperado: " + e.getMessage());
+                logger.severe("Error inesperado: " + e.getMessage());
             }
             
             if (continuar) {
-                System.out.println("\nPresione Enter para continuar...");
+                logger.info("\nPresione Enter para continuar...");
                 scanner.nextLine();
             }
         }
@@ -50,16 +52,16 @@ public class BancoAppMain {
     }
 
     private static void mostrarMenu() {
-        System.out.println("\n┌────────────────────────────────────────┐");
-        System.out.println("│           MENÚ PRINCIPAL               │");
-        System.out.println("├────────────────────────────────────────┤");
-        System.out.println("│  1. Crear cuenta                       │");
-        System.out.println("│  2. Depositar dinero                   │");
-        System.out.println("│  3. Retirar dinero                     │");
-        System.out.println("│  4. Consultar saldo                    │");
-        System.out.println("│  5. Salir                              │");
-        System.out.println("└────────────────────────────────────────┘");
-        System.out.print("Seleccione una opción: ");
+        logger.info("\n┌────────────────────────────────────────┐");
+        logger.info("│           BIENVENIDO A BANCOAPP        │");  
+        logger.info("├────────────────────────────────────────┤");
+        logger.info("│  1. Crear cuenta                       │");
+        logger.info("│  2. Depositar dinero                   │");
+        logger.info("│  3. Retirar dinero                     │");
+        logger.info("│  4. Consultar saldo                    │");
+        logger.info("│  5. Salir                              │");
+        logger.info("└────────────────────────────────────────┘");
+        logger.info("Seleccione una opción:");
     }
 
     private static int leerOpcion() {
@@ -72,65 +74,65 @@ public class BancoAppMain {
 
     private static String mensaje = "Ingrese el ID de la cuenta: ";
     private static void crearCuenta() {
-        System.out.println("\n═══════ CREAR NUEVA CUENTA ═══════");
-        System.out.print(mensaje);
+        logger.info("\n═══════ CREAR NUEVA CUENTA ═══════");
+        logger.info(mensaje);
         String idCuenta = scanner.nextLine().trim();
         
-        System.out.print("Ingrese el saldo inicial: $");
+        logger.info("Ingrese el saldo inicial: $");
         double saldoInicial = Double.parseDouble(scanner.nextLine().trim());
         
         cuentaService.crearCuenta(idCuenta, saldoInicial);
         
-        System.out.println("Cuenta creada exitosamente!");
-        System.out.println("   ID: " + idCuenta);
-        System.out.println("   Saldo inicial: $" + String.format("%.2f", saldoInicial));
+        logger.info("Cuenta creada exitosamente!");
+        logger.log(Level.INFO, () -> String.format("   ID: %s", idCuenta));
+        logger.log(Level.INFO, "   Saldo inicial: ${0,number,0.00}", saldoInicial);
     }
 
     private static void depositar() {
-        System.out.println("\n═══════ DEPOSITAR DINERO ═══════");
-        System.out.print(mensaje);
+        logger.info("\n═══════ DEPOSITAR DINERO ═══════");
+        logger.info(mensaje);
         String idCuenta = scanner.nextLine().trim();
         
-        System.out.print("Ingrese el monto a depositar: $");
+        logger.info("Ingrese el monto a depositar: $");
         double monto = Double.parseDouble(scanner.nextLine().trim());
         
         cuentaService.depositar(idCuenta, monto);
         double nuevoSaldo = cuentaService.consultarSaldo(idCuenta);
         
-        System.out.println("Depósito realizado exitosamente!");
-        System.out.println("   Monto depositado: $" + String.format("%.2f", monto));
-        System.out.println("   Nuevo saldo: $" + String.format("%.2f", nuevoSaldo));
+        logger.info("Depósito realizado exitosamente!");
+        logger.log(Level.INFO, "   Monto depositado: ${0,number,0.00}", monto);
+        logger.log(Level.INFO, "   Nuevo saldo: ${0,number,0.00}", nuevoSaldo);
     }
 
     private static void retirar() {
-        System.out.println("\n═══════ RETIRAR DINERO ═══════");
-        System.out.print(mensaje);
+        logger.info("\n═══════ RETIRAR DINERO ═══════");
+        logger.info(mensaje);
         String idCuenta = scanner.nextLine().trim();
         
         double saldoActual = cuentaService.consultarSaldo(idCuenta);
-        System.out.println("   Saldo disponible: $" + String.format("%.2f", saldoActual));
+        logger.log(Level.INFO, "   Saldo disponible: ${0,number,0.00}", saldoActual);
         
-        System.out.print("Ingrese el monto a retirar: $");
+        logger.info("Ingrese el monto a retirar: $");
         double monto = Double.parseDouble(scanner.nextLine().trim());
         
         cuentaService.retirar(idCuenta, monto);
         double nuevoSaldo = cuentaService.consultarSaldo(idCuenta);
         
-        System.out.println("Retiro realizado exitosamente!");
-        System.out.println("   Monto retirado: $" + String.format("%.2f", monto));
-        System.out.println("   Nuevo saldo: $" + String.format("%.2f", nuevoSaldo));
+        logger.info("Retiro realizado exitosamente!");
+        logger.log(Level.INFO, "   Monto retirado: ${0,number,0.00}", monto);
+        logger.log(Level.INFO, "   Nuevo saldo: ${0,number,0.00}", nuevoSaldo);
     }
 
     private static void consultarSaldo() {
-        System.out.println("\n═══════ CONSULTAR SALDO ═══════");
-        System.out.print(mensaje);
+        logger.info("\n═══════ CONSULTAR SALDO ═══════");
+        logger.info(mensaje);
         String idCuenta = scanner.nextLine().trim();
         
         double saldo = cuentaService.consultarSaldo(idCuenta);
         
-        System.out.println("Consulta realizada exitosamente!");
-        System.out.println("   ID: " + idCuenta);
-        System.out.println("   Saldo actual: $" + String.format("%.2f", saldo));
+        logger.info("Consulta realizada exitosamente!");
+        logger.log(Level.INFO, "   ID: {0}", idCuenta);
+        logger.log(Level.INFO, "   Saldo actual: ${0,number,0.00}", saldo);
     }
 }
 
