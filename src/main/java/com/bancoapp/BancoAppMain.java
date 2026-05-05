@@ -1,5 +1,6 @@
 package com.bancoapp;
 
+import com.bancoapp.model.Cuenta;
 import com.bancoapp.repository.CuentaRepositoryImpl;
 import com.bancoapp.service.CuentaService;
 
@@ -70,10 +71,9 @@ public class BancoAppMain {
         }
     }
 
-    private static final String MENSAJE = "Ingrese el ID de la cuenta: ";
     private static void crearCuenta() {
         System.out.println("\n═══════ CREAR NUEVA CUENTA ═══════");
-        System.out.print(MENSAJE);
+        System.out.print("Ingrese el ID de la cuenta: ");
         String idCuenta = scanner.nextLine().trim();
         
         System.out.print("Ingrese el saldo inicial: $");
@@ -88,7 +88,7 @@ public class BancoAppMain {
 
     private static void depositar() {
         System.out.println("\n═══════ DEPOSITAR DINERO ═══════");
-        System.out.print(MENSAJE);
+        System.out.print("Ingrese el ID de la cuenta: ");
         String idCuenta = scanner.nextLine().trim();
         
         System.out.print("Ingrese el monto a depositar: $");
@@ -104,7 +104,7 @@ public class BancoAppMain {
 
     private static void retirar() {
         System.out.println("\n═══════ RETIRAR DINERO ═══════");
-        System.out.print(MENSAJE);
+        System.out.print("Ingrese el ID de la cuenta: ");
         String idCuenta = scanner.nextLine().trim();
         
         double saldoActual = cuentaService.consultarSaldo(idCuenta);
@@ -123,7 +123,7 @@ public class BancoAppMain {
 
     private static void consultarSaldo() {
         System.out.println("\n═══════ CONSULTAR SALDO ═══════");
-        System.out.print(MENSAJE);
+        System.out.print("Ingrese el ID de la cuenta: ");
         String idCuenta = scanner.nextLine().trim();
         
         double saldo = cuentaService.consultarSaldo(idCuenta);
