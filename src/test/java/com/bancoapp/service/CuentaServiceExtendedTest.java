@@ -201,7 +201,7 @@ class CuentaServiceExtendedTest {
         // Configurar mock para retornar la cuenta
         when(cuentaRepository.buscarPorId("C-RET-ALL")).thenReturn(Optional.of(cuenta));
 
-        // Act: Retirar todo el saldo (500 - 500 = 0)
+        // Act: Retirar el saldo total (500 - 500 = 0)
         cuentaService.retirar("C-RET-ALL", 500);
 
         // Assert: Verificar que el saldo es cero después del retiro total
