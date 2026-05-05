@@ -77,9 +77,13 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
-                        </configuration>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/site/jacoco</outputDirectory>
+                                    <formats>
+                                        <format>XML</format>
+                                        <format>HTML</format>
+                                    </formats>
+                                </configuration>
                     </execution>
                 </executions>
             </plugin>

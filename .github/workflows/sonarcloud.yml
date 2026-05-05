@@ -24,8 +24,5 @@ jobs:
       - name: Build and generate JaCoCo coverage
         run: mvn -B -Pci -DskipTests=false clean verify
 
-      - name: SonarCloud Scan
-        uses: sonarsource/sonarcloud-github-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+      - name: SonarCloud Scan (Maven)
+        run: mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }} -Dsonar.projectKey=FredyHoyos_BancoApp -Dsonar.organization=fredyhoyos
