@@ -29,32 +29,18 @@ class CuentaExtendedTest {
         assertEquals(0, cuenta.getSaldo());
     }
 
-    @Test
-    @DisplayName("Rechazar constructor con ID nulo")
-    void rechazarConstructorConIdNulo() {
+    @ParameterizedTest
+    @CsvSource({
+            "null",
+            "''",
+            "'   '"
+    })
+    @DisplayName("Rechazar constructor con ID nulo, vacío o en blanco")
+    void rechazarConstructorConIdInvalido(String idInvalido) {
+        String idParaTest = idInvalido.equals("null") ? null : idInvalido;
         IllegalArgumentException exception = assertThrows(
                 IllegalArgumentException.class,
-                () -> new Cuenta(null, 1000)
-        );
-        assertEquals("El id de cuenta no puede ser vacío", exception.getMessage());
-    }
-
-    @Test
-    @DisplayName("Rechazar constructor con ID vacío")
-    void rechazarConstructorConIdVacio() {
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> new Cuenta("", 1000)
-        );
-        assertEquals("El id de cuenta no puede ser vacío", exception.getMessage());
-    }
-
-    @Test
-    @DisplayName("Rechazar constructor con ID en blanco")
-    void rechazarConstructorConIdEnBlanco() {
-        IllegalArgumentException exception = assertThrows(
-                IllegalArgumentException.class,
-                () -> new Cuenta("   ", 1000)
+                () -> new Cuenta(idParaTest, 1000)
         );
         assertEquals("El id de cuenta no puede ser vacío", exception.getMessage());
     }

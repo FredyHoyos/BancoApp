@@ -15,8 +15,10 @@ public class BancoAppMain {
 
     private static Logger logger = Logger.getLogger(BancoAppMain.class.getName());
 
+    @SuppressWarnings("java:S7467")
     public static void main(String[] args) {
-        logger.info("Iniciando BancoApp - Java 21");
+        int argsCount = args == null ? 0 : args.length;
+        logger.log(Level.INFO, "Iniciando BancoApp - Java 25 (args={0})", argsCount);
 
         boolean continuar = true;
         
@@ -39,7 +41,7 @@ public class BancoAppMain {
             } catch (IllegalArgumentException e) {
                 logger.severe("Error: " + e.getMessage());
             } catch (Exception e) {
-                logger.severe("Error inesperado: " + e.getMessage());
+                logger.log(Level.SEVERE, "Error inesperado", e);
             }
             
             if (continuar) {
@@ -64,10 +66,11 @@ public class BancoAppMain {
         logger.info("Seleccione una opción:");
     }
 
+    @SuppressWarnings("java:S7467")
     private static int leerOpcion() {
         try {
             return Integer.parseInt(scanner.nextLine().trim());
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException ignored) {
             return -1;
         }
     }
