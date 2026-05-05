@@ -2,5 +2,6 @@
     "sonarlint.connectedMode.project": {
         "connectionId": "fredyhoyos",
         "projectKey": "FredyHoyos_BancoApp"
-    }
+    },
+    "java.configuration.updateBuildConfiguration": "interactive"
 }
